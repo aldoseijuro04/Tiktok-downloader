@@ -1,0 +1,35 @@
+name: TikTok Downloader
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'Link TikTok'
+        required: true
+        type: string
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4
+
+      - name: Run downloader
+        run: |
+          echo "${{ github.event.inputs.url }}" | python ttdownload.py
+
+      - name: Upload result video
+        uses: actions/upload-artifact@v4
+        with:
+          name: tiktok-video
+          path: tiktok_no_watermark.mp4
